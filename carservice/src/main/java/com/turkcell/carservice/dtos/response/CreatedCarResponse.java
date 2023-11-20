@@ -1,4 +1,4 @@
-package com.turkcell.rentalservice.dtos.response;
+package com.turkcell.carservice.dtos.response;
 
 import lombok.*;
 
@@ -11,4 +11,7 @@ import lombok.*;
 public class CreatedCarResponse {
     private String carId;
     private String brand;
+    private int hasStock;
+    private String inventoryCode;
+
 }
