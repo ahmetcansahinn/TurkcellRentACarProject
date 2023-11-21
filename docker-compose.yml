@@ -4,6 +4,11 @@ services:
     ports:
       - 8761:8761
     mem_limit: 700m
+  api-gateway:
+    image: ahmetcansahin/apigateway
+    ports:
+      - 8081:8081
+    mem_limit: 700m
   keycloak:
     image: quay.io/keycloak/keycloak
     ports:
