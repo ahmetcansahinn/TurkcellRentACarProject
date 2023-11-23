@@ -14,21 +14,27 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="apigateway" target="17" />
       <module name="car.service" target="17" />
+      <module name="carservice" target="17" />
       <module name="orderservice" target="17" />
       <module name="product.service" target="17" />
       <module name="rental.service" target="17" />
+      <module name="rentalservice" target="17" />
       <module name="service" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
+      <module name="apigateway" options="-parameters" />
       <module name="car.service" options="-parameters" />
+      <module name="carservice" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="orderservice" options="-parameters" />
       <module name="product.service" options="-parameters" />
       <module name="rental.service" options="-parameters" />
+      <module name="rentalservice" options="-parameters" />
       <module name="service" options="" />
       <module name="service (1)" options="-parameters" />
       <module name="service (2)" options="-parameters" />
