@@ -21,7 +21,7 @@ public class RentalCarController {
     private final WebClient.Builder webClient;
 
     @PostMapping
-    public ResponseEntity<Boolean> avaliableCars(@RequestBody List<CreateRentalCarRequest> requests) {
+    public ResponseEntity<Boolean> availableCars(@RequestBody List<CreateRentalCarRequest> requests) {
         Boolean allStockAvailable = rentalCarService.availableRent(requests);
 
         if (allStockAvailable) {

@@ -24,6 +24,8 @@ public class RentalCar {
     private double dailyPrice;
     @Column(name = "rent_date")
     private LocalDate rentDate;
+    @Column(name = "customer_id")
+    private int customerId;
 
 
 }
