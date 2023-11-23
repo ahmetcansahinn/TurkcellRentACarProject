@@ -27,7 +27,19 @@ public class RentalCarManager implements  RentalCarService{
                         .retrieve()
                         .bodyToMono(Boolean.class)
                         .block();
-                if (!hasStock) {
+                Boolean hasBalance = webClient.build()
+                        .get()
+                        .uri("http://customer-service/api/rentals/balance",
+                                (uriBuilder) -> uriBuilder
+                                        .queryParam("inventoryCode",request.getInventoryCode())
+                                        .queryParam("requiredBalance", request.getAmount())
+
+                                        .build())
+                        .retrieve()
+                        .bodyToMono(Boolean.class)
+                        .block();
+
+                if (!hasStock||!hasBalance) {
 
                     return false;
                 }

@@ -3,11 +3,9 @@ package com.turkcell.customerservice.controller;
 import com.turkcell.customerservice.entities.Customer;
 import com.turkcell.customerservice.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/customers")
 @RestController
@@ -16,7 +14,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
 
-    @GetMapping
+    @GetMapping("findById")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int customerId) {
         Customer customer = customerService.getById(customerId);
         if (customer != null) {
@@ -24,5 +22,15 @@ public class CustomerController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/balance")
+    public Boolean getByBalance(@RequestParam String inventoryCode,
+                                      @RequestParam int requiredBalance){
+        return customerService.getByIdForBalance(inventoryCode,requiredBalance);
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Customer add(@RequestBody Customer customer){
+        return customerService.addCustomer(customer);
     }
 }

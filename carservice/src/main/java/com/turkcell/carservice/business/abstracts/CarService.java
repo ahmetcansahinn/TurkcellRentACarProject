@@ -16,6 +16,6 @@ public interface CarService {
     Car getByCarId(String carId);
 
     void deleteCar(String carId);
-    boolean getByIdForStock(String carId,int requiredStock);
+    boolean getByIdForStock(String code,int requiredStock);
 
 }
