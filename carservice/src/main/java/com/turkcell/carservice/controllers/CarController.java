@@ -1,14 +1,18 @@
 package com.turkcell.carservice.controllers;
 
 import com.turkcell.carservice.business.abstracts.CarService;
+import com.turkcell.carservice.dtos.CarImagesDto;
 import com.turkcell.carservice.dtos.request.CreateCarRequest;
 import com.turkcell.carservice.dtos.response.CreatedCarResponse;
 import com.turkcell.carservice.entities.Car;
+import com.turkcell.carservice.entities.CarImages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api/cars")
@@ -18,6 +22,7 @@ import java.util.List;
 
 public class CarController {
     private final CarService carService;
+    private final ImageController imageController;
 
     @GetMapping
     public ResponseEntity<List<Car>> getAll(){
@@ -46,9 +51,24 @@ public class CarController {
         carService.deleteCar(carId);
     }
 
-    @GetMapping("/stock")
-    public Boolean getByInventoryCode(@RequestParam String invCode,
-                                      @RequestParam int requiredStock){
-        return carService.getByIdForStock(invCode,requiredStock);
+    @GetMapping("car-status")
+    public String getCarStatus(@RequestParam String carId,
+                               @RequestParam String name) {
+        return carService.getCarStatus(carId);
     }
+    @PostMapping("/AddCarImages")
+    public String AddCarImages(@RequestBody List<CarImagesDto> carImagesDtos)  throws IOException {
+
+        List<CarImages> carImagesList = new ArrayList<>();
+        for(CarImagesDto item:carImagesDtos) {
+            CarImages carImages = new CarImages();
+            carImages.setId(item.getId());
+            carImages.setCarId(item.getCarId());
+            carImages.setCarImage(imageController.uploadImage(item.getBase64Data().replace(" ","")));
+            carImagesList.add(carImages);
+        }
+        carService.addCarImages(carImagesList);
+        return ("Araç resim ekleme işlemi başarı ile gerçekleşti.");
+    }
+
 }

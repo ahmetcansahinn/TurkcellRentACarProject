@@ -1,10 +1,12 @@
 package com.turkcell.carservice.business.concrets;
 
 import com.turkcell.carservice.dtos.response.CreatedCarResponse;
+import com.turkcell.carservice.entities.CarImages;
 import com.turkcell.carservice.repositories.CarRepository;
 import com.turkcell.carservice.business.abstracts.CarService;
 import com.turkcell.carservice.dtos.request.CreateCarRequest;
 import com.turkcell.carservice.entities.Car;
+import com.turkcell.carservice.repositories.ImagesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class CarManager implements CarService {
     private final CarRepository carRepository;
+    private final ImagesRepository imagesRepository;
 
     @Override
     public List<Car> getAll() {     // Requestlere build edilecek yapamadık ???
@@ -30,9 +33,9 @@ public class CarManager implements CarService {
                 .model(request.getModel())
                 .yearOfManufacture(request.getYearOfManufacture())
                 .dailyPrice(request.getDailyPrice())
-                .picture(request.isPicture())
                 .hasStock(request.getHasStock())
                 .inventoryCode(request.getInventoryCode())
+                .carStatus(request.getCarStatus())
                 .build();
         car = carRepository.save(car);
         CreatedCarResponse response = CreatedCarResponse
@@ -55,7 +58,6 @@ public class CarManager implements CarService {
         car.setModel(request.getModel());
         car.setYearOfManufacture(request.getYearOfManufacture());
         car.setDailyPrice(request.getDailyPrice());
-        car.setPicture(request.isPicture());
         car.setHasStock(request.getHasStock());
         car.setInventoryCode(request.getInventoryCode());
 
@@ -84,12 +86,23 @@ public class CarManager implements CarService {
         carRepository.deleteById(carId);
     }
 
-    @Override
-    public boolean getByIdForStock(String code,int requiredStock) {
-        Car car = carRepository.findByInventoryCodeQuery(code);
-        if(car == null || car.getHasStock() <requiredStock)
 
-            return false;
-        return true;
+    public String getCarStatus(String carId) {
+        Car car = carRepository.findById(carId).get();
+        System.out.println("araç:" + car.getCarStatus());
+        return car.getCarStatus();
     }
+    public CarImages addCarImages(List<CarImages> carImages) {
+        for (CarImages item : carImages) {
+            CarImages newCarImages = new CarImages();
+            newCarImages.setId(item.getId());
+            newCarImages.setCarId(item.getCarId());
+            newCarImages.setCarImage(item.getCarImage());
+            imagesRepository.save(newCarImages);
+        }
+        return null;
+    }
+
+
 }
+

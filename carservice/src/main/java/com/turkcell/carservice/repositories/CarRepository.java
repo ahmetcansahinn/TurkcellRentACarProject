@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.Query;
 public interface CarRepository extends MongoRepository<Car,String> {
 //    Car findByInventoryCode(String inventoryCode);
 
-    @Query("{'inventoryCode': ?0 }")
+    @Query("{'carId': ?0 }")
     Car findByInventoryCodeQuery(String invCode);
 }

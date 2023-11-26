@@ -26,10 +26,8 @@ public class Customer {
     private String customerLastName;
     @Column(name = "balance")
     private double balance;
-    @Column(name = "inventory_code")
-    private int inventoryCode;
-
-
+    @Column(name = "rent_day")
+    private int rentDay;
 
 
 }

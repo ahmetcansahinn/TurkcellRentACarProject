@@ -3,6 +3,7 @@ package com.turkcell.carservice.business.abstracts;
 import com.turkcell.carservice.dtos.request.CreateCarRequest;
 import com.turkcell.carservice.dtos.response.CreatedCarResponse;
 import com.turkcell.carservice.entities.Car;
+import com.turkcell.carservice.entities.CarImages;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public interface CarService {
     Car getByCarId(String carId);
 
     void deleteCar(String carId);
-    boolean getByIdForStock(String code,int requiredStock);
 
-}
+    public String getCarStatus(String carId);
+    public CarImages addCarImages(List<CarImages> carImages);
+
+
+    }

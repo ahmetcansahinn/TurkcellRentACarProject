@@ -14,8 +14,8 @@ public class CreateCarRequest {
     private String model;
     private String yearOfManufacture;
     private double dailyPrice;
-    private boolean picture;
     private int hasStock;
     private String inventoryCode;
+    private String carStatus;
 
 }

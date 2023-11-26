@@ -5,6 +5,8 @@ import com.turkcell.customerservice.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerManager implements CustomerService{
@@ -12,20 +14,12 @@ public class CustomerManager implements CustomerService{
 
     @Override
     public Customer getById(int customerId) {
-        return customerRepository.findById(customerId).orElseThrow() ;
-    }
-
-    @Override
-    public boolean getByIdForBalance(String inventoryCode, double requiredBalance) {
-        Customer customer = customerRepository.findByInventoryCodeQuery(inventoryCode);
-        if(customer == null || customer.getBalance() <requiredBalance)
-
-            return false;
-        return true;
+      return customerRepository.findById(customerId).orElseThrow();
     }
 
     @Override
     public Customer addCustomer(Customer customer) {
+
         return customerRepository.save(customer);
     }
 }
