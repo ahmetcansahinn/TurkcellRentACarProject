@@ -6,6 +6,7 @@ import com.turkcell.carservice.entities.Car;
 import com.turkcell.carservice.entities.CarImages;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CarService {
     List<Car> getAll();
@@ -20,6 +21,8 @@ public interface CarService {
 
     public String getCarStatus(String carId);
     public CarImages addCarImages(List<CarImages> carImages);
+    Optional<Car> getById(String Id);
 
 
-    }
+
+}

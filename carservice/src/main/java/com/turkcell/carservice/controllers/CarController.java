@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/api/cars")
 @RestController
@@ -36,7 +37,7 @@ public class CarController {
         return carService.add(request);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/updateStock/{id}")
     public ResponseEntity update(@PathVariable String id, @RequestBody CreateCarRequest request){
         carService.update(id, request);
         return new ResponseEntity("Ürün Güncellendi!",HttpStatus.CREATED);
@@ -70,5 +71,10 @@ public class CarController {
         carService.addCarImages(carImagesList);
         return ("Araç resim ekleme işlemi başarı ile gerçekleşti.");
     }
+    @GetMapping("getByCarId")
+    public Optional<Car> getById(@RequestParam String id) {
+        return carService.getById(id);
+    }
+
 
 }

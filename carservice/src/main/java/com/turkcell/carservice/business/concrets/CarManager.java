@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class CarManager implements CarService {
     @Override
     public CreatedCarResponse update(String id, CreateCarRequest request) {
         Car car = carRepository.findById(id).orElseThrow();
+
 
         car.setBrand(request.getBrand());
         car.setColorOfCar(request.getColorOfCar());
@@ -102,6 +104,11 @@ public class CarManager implements CarService {
         }
         return null;
     }
+    @Override
+    public Optional<Car> getById(String id) {
+        return carRepository.findById(id);
+    }
+
 
 
 }

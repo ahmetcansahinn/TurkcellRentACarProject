@@ -3,6 +3,7 @@ package com.turkcell.rentalservice.controller;
 import com.turkcell.rentalservice.business.RentalCarService;
 import com.turkcell.rentalservice.dtos.CarDto;
 import com.turkcell.rentalservice.dtos.CreateRentalCarRequest;
+import com.turkcell.rentalservice.dtos.CustomerDto;
 import com.turkcell.rentalservice.entities.RentalCar;
 import com.turkcell.rentalservice.repository.RentalCarRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,10 @@ public class RentalCarController {
     public ResponseEntity<List<RentalCar>> getByCustomerId(@PathVariable int customerId) {
         List<RentalCar> rentalCars = rentalCarRepository.findByCustomerId(customerId);
         return ResponseEntity.ok(rentalCars);
+    }
+    @GetMapping("/list")
+    public List<RentalCar> listRentalCars() {
+        return rentalCarRepository.findAll();
     }
 
 }

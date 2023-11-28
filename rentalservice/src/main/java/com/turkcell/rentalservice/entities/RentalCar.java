@@ -1,5 +1,7 @@
 package com.turkcell.rentalservice.entities;
 
+import com.turkcell.rentalservice.dtos.CarDto;
+import com.turkcell.rentalservice.dtos.CustomerDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +28,16 @@ public class RentalCar {
     private int customerId;
     @Column(name = "customer_name")
     private String customerName;
+    public void setCarDto(CarDto carDto) {
+        this.carId= Integer.parseInt(carDto.getCarId());
+        this.brand=carDto.getBrand();
+    }
+
+    public void setCustomerDto(CustomerDto customerDto) {
+        this.customerName=customerDto.getCustomerName();
+        this.customerId=customerDto.getCustomerId();
+
+    }
 
 
 

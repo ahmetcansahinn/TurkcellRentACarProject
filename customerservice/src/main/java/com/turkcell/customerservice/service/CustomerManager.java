@@ -22,4 +22,9 @@ public class CustomerManager implements CustomerService{
 
         return customerRepository.save(customer);
     }
+    @Override
+    public Optional<Customer> getByCustomerId(int id) {
+        return customerRepository.findById(id);
+    }
+
 }

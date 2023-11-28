@@ -12,7 +12,6 @@
         <module name="discovery-server" />
         <module name="service (1)" />
         <module name="customerservice" />
-        <module name="notificationservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -35,7 +34,6 @@
       <module name="carservice" options="-parameters" />
       <module name="customerservice" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
-      <module name="notificationservice" options="-parameters" />
       <module name="order.service" options="-parameters" />
       <module name="orderservice" options="-parameters" />
       <module name="product.service" options="-parameters" />

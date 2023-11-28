@@ -25,6 +25,14 @@ public class Car {
     private String inventoryCode;
     private LocalDate date;
     private String carStatus;
+
+    public void decrementStock(int decrementBy) {
+        if (this.hasStock - decrementBy >= 0) {
+            this.hasStock -= decrementBy;
+        } else {
+            throw new IllegalArgumentException("Stok miktarı yetersiz.");
+        }
+    }
 }
 
 
