@@ -1,14 +1,30 @@
 services:
+  postgres:
+    image: postgres
+    container_name: rentacar
+    environment:
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "7676:5432"
+    restart: always
+    networks:
+      - rental-network
   discovery-service:
-    image: ahmetcansahin/discoveryserver
+    build: ./discovery-server
     ports:
       - 8761:8761
     mem_limit: 700m
+    networks:
+      - rental-network
   api-gateway:
-    image: ahmetcansahin/apigateway
+    build: ./api-gateway
     ports:
-      - 8081:8081
+      - 8083:8083
     mem_limit: 700m
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - rental-network
   keycloak:
     image: quay.io/keycloak/keycloak
     ports:
@@ -19,19 +35,97 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     command:
       - start-dev
+    volumes:
+      - /Users/cansahin/Desktop/proje:/opt/keycloak/data
+    networks:
+      - rental-network
+  carservice:
+    build: ./carservice
+    ports:
+      - 8084:8084
+    mem_limit: 700m
+    environment:
+      - eureka.instance.prefer-ip-address=true
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka
+      - spring.data.mongodb.uri=mongodb://root:root@mongodb:27017/carService?authSource=admin
+    depends_on:
+      - mongodb
+      - discovery-service
+      - api-gateway
+    networks:
+      - rental-network
+  rental-service:
+    build: ./rentalservice
+    ports:
+      - 8085:8085
+    mem_limit: 700m
+    environment:
+      - eureka.instance.prefer-ip-address=true
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/rental
+      - spring.kafka.bootstrap-servers=kafka:9092
+      - spring.datasource.user=postgres
+      - spring.datasource.password=password123
+    depends_on:
+      - postgres
+      - discovery-service
+      - api-gateway
+      - notification-service
+    networks:
+      - rental-network
+
+  customer-service:
+    build: ./customerservice
+    ports:
+      - 8089:8089
+    mem_limit: 700m
+    environment:
+      - eureka.instance.prefer-ip-address=true
+      - eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/customer
+      - spring.kafka.bootstrap-servers=kafka:9092
+      - spring.datasource.user=postgres
+      - spring.datasource.password=password123
+    depends_on:
+      - postgres
+      - discovery-service
+      - api-gateway
+      - notification-service
+    networks:
+      - rental-network
+
+
+
+
   mongodb:
     image: mongo
     ports:
-      - 27017:27017
+     - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - /Users/cansahin/Desktop/mongodb:/data/db
+    networks:
+      - rental-network
   zookeeper:
     image: confluentinc/cp-zookeeper
     ports:
       - 2181:2181
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - rental-network
+
+  notification-service:
+    build: ./notificationservice
+    ports:
+      - 8011:8011
+    environment:
+      - spring.kafka.bootstrap-servers=kafka:9092
+    networks:
+      - rental-network
+
   kafka:
     image: confluentinc/cp-kafka
     ports:
@@ -43,3 +137,9 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - rental-network
+
+networks:
+    rental-network:
+      driver: bridge

@@ -2,23 +2,22 @@ package com.turkcell.rentalservice.business;
 
 import com.turkcell.rentalservice.dtos.CarDto;
 import com.turkcell.rentalservice.dtos.CreateRentalCarRequest;
-import com.turkcell.rentalservice.dtos.CreatedRentalCarResponse;
 import com.turkcell.rentalservice.dtos.CustomerDto;
 import com.turkcell.rentalservice.entities.RentalCar;
 import com.turkcell.rentalservice.repository.RentalCarRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RentalCarManager implements RentalCarService {
     private final RentalCarRepository rentalCarRepository;
     private final RestTemplate restTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Override
     public String submitOrder(CreateRentalCarRequest request) {
@@ -32,8 +31,8 @@ public class RentalCarManager implements RentalCarService {
 
     public String submitCustomer(CreateRentalCarRequest request) {
         CustomerDto customerDto = getCustomerDto(request.getCustomerId());
-        if (customerDto.getRentDay() > 7) {
-            throw new RuntimeException("Araç 7 günden fazla kiralanamaz");
+        if (customerDto.getBalance()<500) {
+            throw new RuntimeException("Sistem için yeterli bakiye yok!");
         }
         return "Müşteri bilgileri doğrulandı.";
     }
@@ -44,6 +43,22 @@ public class RentalCarManager implements RentalCarService {
             submitOrder(request);
             submitCustomer(request);
             submitUpdate(request);
+
+
+            kafkaTemplate.send("notificationTopic","Araç kiralandı");
+            RentalCar rentalCar=new RentalCar();
+            CustomerDto customerDto = getCustomerDto(request.getCustomerId());
+            CarDto carDto = getCarDto(request.getCarId());
+            rentalCar.setCarId(carDto.getCarId());
+            rentalCar.setBrand(carDto.getBrand());
+            rentalCar.setCustomerId(customerDto.getCustomerId());
+            rentalCar.setCustomerName(customerDto.getCustomerName());
+            rentalCar.setDailyPrice(carDto.getDailyPrice());
+
+
+            rentalCarRepository.save(rentalCar);
+
+
 
             return "Sisteme ekleme işlemi başarıyla gerçekleştirildi.";
         } catch (RuntimeException e) {
@@ -76,10 +91,22 @@ public class RentalCarManager implements RentalCarService {
     }
 
     private CarDto getCarDto(String id) {
-        return restTemplate.getForObject("http://localhost:8084/api/cars/getById/" + id, CarDto.class);
+        Mono<CarDto> carDtoMono = WebClient.create()
+                .get()
+                .uri("http://localhost:8084/api/cars/getById/{id}", id)
+                .retrieve()
+                .bodyToMono(CarDto.class);
+
+        return carDtoMono.block();
     }
 
     private CustomerDto getCustomerDto(int customerId) {
-        return restTemplate.getForObject("http://localhost:8089/api/customers/getById/" + customerId, CustomerDto.class);
+        Mono<CustomerDto> customerDtoMono = WebClient.create()
+                .get()
+                .uri("http://localhost:8089/api/customers/getById/{customerId}", customerId)
+                .retrieve()
+                .bodyToMono(CustomerDto.class);
+
+        return customerDtoMono.block();
     }
 }
