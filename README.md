@@ -2,14 +2,14 @@
 
 Microservisler birbirleriyle senkron ve asenkron bağlı şekildedir.
 
-### Keycloak ve OAuth:
+## Keycloak ve OAuth:
 Keycloak 8080 portunu kullanmaktadır.
 
-### Discovery Server:
+## Discovery Server:
 Spring Eureka ile aynı servis birden çok portta çalışabiliyor.
 localhost:8761/
 
-### Car Service:
+## Car Service:
 Database olarak mongodb'yi kullanmaktadır. 8084 portunu kullanıyor. Cloudinary aracılığıyla resimler servise yükleniyor. 
 ### swagger arayüzü:
 http://localhost:8085/swagger-ui/index.html#/
@@ -18,7 +18,7 @@ http://localhost:8085/swagger-ui/index.html#/
 
 ### Rental Service
 Database olarak postgreSql'i kullanmaktadır. 8084 portunu kullanıyor.
-### swagger arayüzü:
+## swagger arayüzü:
 http://localhost:8084/swagger-ui/index.html#/
 
 
