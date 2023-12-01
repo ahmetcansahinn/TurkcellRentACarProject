@@ -14,15 +14,21 @@ Database olarak mongodb'yi kullanmaktadır. 8084 portunu kullanıyor. Cloudinary
 ### swagger arayüzü:
 http://localhost:8085/swagger-ui/index.html#/
 
+
+
 ### Rental Service
 Database olarak postgreSql'i kullanmaktadır. 8084 portunu kullanıyor.
 ### swagger arayüzü:
 http://localhost:8084/swagger-ui/index.html#/
 
+
+
 ### Customer Service
 Database olarak postgreSql'i kullanmaktadır. 8089 portunu kullanıyor.
 ### swagger arayüzü:
 http://localhost:8089/swagger-ui/index.html#/
+
+
 
 ### Notification Service: 
 Rental service ile kafka ile async olarak bağlı. Kafka zookeper ile birlikte docker üzerinde çalışmaktadır. 
